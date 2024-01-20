@@ -115,6 +115,12 @@ pub struct Commands<'w, 's> {
     entities: &'w Entities,
 }
 
+impl<'w, 's> std::fmt::Debug for Commands<'w, 's> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Commands")
+    }
+}
+
 impl SystemBuffer for CommandQueue {
     #[inline]
     fn apply(&mut self, _system_meta: &SystemMeta, world: &mut World) {
