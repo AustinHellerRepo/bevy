@@ -45,9 +45,8 @@ impl BevyManifest {
         let mut manifests = MANIFESTS.write().unwrap_or_else(PoisonError::into_inner);
         manifests.insert(key, manifest);
 
-        f(RwLockWriteGuard::downgrade(manifests)
-            .get(&manifest_path)
-            .unwrap())
+        // Use get instead of downgrade to avoid unstable feature
+        f(manifests.get(&manifest_path).unwrap())
     }
 
     fn get_manifest_path() -> PathBuf {

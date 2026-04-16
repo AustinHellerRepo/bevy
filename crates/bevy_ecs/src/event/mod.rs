@@ -1107,4 +1107,75 @@ mod tests {
 
         // No asserts; test just needs to compile
     }
+
+    #[test]
+    fn test_disable_triggers_resource() {
+        use crate::prelude::*;
+        use crate::event::trigger::DisableTriggers;
+
+        #[derive(Component, Default)]
+        struct InitiateTrigger;
+
+        #[derive(Component, Default)]
+        struct TriggerPerformed;
+
+        let mut world = World::new();
+
+        // Spawn an entity with a component
+        let entity = world.spawn_empty().id();
+        
+        // Add an observer to the world that adds a marker component when InitiateTrigger is added
+        // The observer watches for Add<InitiateTrigger> events and inserts TriggerPerformed
+        // We need to use Commands to make changes in the observer
+        world.add_observer(|trigger: On<Add, InitiateTrigger>, mut commands: Commands| {
+            // The trigger is the Add<InitiateTrigger> event which has an entity field
+            // Use commands to insert the component on the entity
+            commands.entity(trigger.entity).insert(TriggerPerformed);
+        });
+
+        // Spawn an entity with InitiateTrigger - this should trigger the observer
+        // We'll verify the observer ran by checking that a marker was added
+        world.entity_mut(entity).insert(InitiateTrigger);
+        
+        // Verify the component was added (observers should have run)
+        assert!(
+            world.entity(entity).get::<TriggerPerformed>().is_some(),
+            "TriggerPerformed component should exist while triggers are active"
+        );
+
+        // Clean up
+        world.entity_mut(entity).remove::<InitiateTrigger>();
+        world.entity_mut(entity).remove::<TriggerPerformed>();
+
+        // Next we will insert the DisableTriggers resource and try spawning an entity with the InitialTrigger component again
+        // It should not add the TriggerPerformed component to the entity since the trigger should not run
+
+        world.insert_resource(DisableTriggers);
+
+        world.entity_mut(entity).insert(InitiateTrigger);
+
+        // Verify the component was not added (observers should have run)
+        assert!(
+            world.entity(entity).get::<TriggerPerformed>().is_none(),
+            "TriggerPerformed component should not exist while triggers are inactive"
+        );
+        
+        // Clean up
+        world.entity_mut(entity).remove::<InitiateTrigger>();
+
+        // Remove resource to test that triggers can be reactivated
+        world.remove_resource::<DisableTriggers>();
+
+        world.entity_mut(entity).insert(InitiateTrigger);
+        
+        // Verify the component was added (observers be running again)
+        assert!(
+            world.entity(entity).get::<TriggerPerformed>().is_some(),
+            "TriggerPerformed component should exist while triggers are active"
+        );
+
+        // Clean up
+        world.entity_mut(entity).remove::<InitiateTrigger>();
+        world.entity_mut(entity).remove::<TriggerPerformed>();
+    }
 }

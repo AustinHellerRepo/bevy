@@ -5,11 +5,37 @@ use crate::{
     entity::Entity,
     event::{EntityEvent, Event},
     observer::{CachedObservers, TriggerContext},
+    resource::Resource,
     traversal::Traversal,
     world::DeferredWorld,
 };
 use bevy_ptr::PtrMut;
 use core::{fmt, marker::PhantomData};
+
+/// Resource that, when present in the World, disables all observer triggers.
+/// 
+/// When this resource is inserted into the World, all calls to `World::trigger`
+/// and related methods will silently skip running any observers. When the resource
+/// is removed, observers will run normally again.
+/// 
+/// This is useful for performing bulk operations on the World without triggering
+/// observers, then re-enabling them afterward.
+/// 
+/// # Example
+/// ```
+/// # use bevy_ecs::prelude::*;
+/// # #[derive(Component)] struct A;
+/// # let mut world = World::new();
+/// # world.add_observer(|_: On<Add, A>| { println!("triggered"); });
+/// // Disable triggers
+/// world.insert_resource(DisableTriggers);
+/// world.spawn(A); // No observer triggered
+/// // Re-enable triggers
+/// world.remove_resource::<DisableTriggers>();
+/// world.spawn(A); // Observer will be triggered
+/// ```
+#[derive(Resource)]
+pub struct DisableTriggers;
 
 /// [`Trigger`] determines _how_ an [`Event`] is triggered when [`World::trigger`](crate::world::World::trigger) is called.
 /// This decides which [`Observer`](crate::observer::Observer)s will run, what data gets passed to them, and the order they will
@@ -97,6 +123,10 @@ impl GlobalTrigger {
         trigger_context: &TriggerContext,
         mut event: PtrMut,
     ) {
+        // Check if triggers are disabled
+        if world.get_resource::<DisableTriggers>().is_some() {
+            return;
+        }
         // SAFETY: `observers` is the only active reference to something in `world`
         unsafe {
             world.as_unsafe_world_cell().increment_trigger_id();
@@ -181,6 +211,10 @@ pub unsafe fn trigger_entity_internal(
     target_entity: Entity,
     trigger_context: &TriggerContext,
 ) {
+    // Check if triggers are disabled
+    if world.get_resource::<DisableTriggers>().is_some() {
+        return;
+    }
     // SAFETY: there are no outstanding world references
     unsafe {
         world.as_unsafe_world_cell().increment_trigger_id();
@@ -459,6 +493,10 @@ impl<'a> EntityComponentsTrigger<'a> {
         entity: Entity,
         trigger_context: &TriggerContext,
     ) {
+        // Check if triggers are disabled
+        if world.get_resource::<DisableTriggers>().is_some() {
+            return;
+        }
         // SAFETY:
         // - `observers` come from `world` and match the event type `E`, enforced by the call to `trigger`
         // - the passed in event pointer comes from `event`, which is an `Event`
