@@ -7,6 +7,8 @@ pub use entity_observer::ObservedBy;
 pub use runner::*;
 use variadics_please::all_tuples;
 
+use crate::resource::Resource;
+
 use crate::{
     archetype::ArchetypeFlags,
     change_detection::MaybeLocation,
@@ -372,6 +374,31 @@ pub struct CachedComponentObservers {
     entity_map: EntityHashMap<ObserverMap>,
 }
 
+/// Resource that, when present in the World, disables all observer triggers.
+///
+/// When this resource is inserted into the World, all calls to `World::trigger`
+/// and related methods will silently skip running any observers. When the resource
+/// is removed, observers will run normally again.
+///
+/// This is useful for performing bulk operations on the World without triggering
+/// observers, then re-enabling them afterward.
+///
+/// # Example
+/// ```
+/// # use bevy_ecs::prelude::*;
+/// # #[derive(Component)] struct A;
+/// # let mut world = World::new();
+/// # world.add_observer(|_: Trigger<OnAdd, A>| { println!("triggered"); });
+/// // Disable triggers
+/// world.insert_resource(DisableTriggers);
+/// world.spawn(A); // No observer triggered
+/// // Re-enable triggers
+/// world.remove_resource::<DisableTriggers>();
+/// world.spawn(A); // Observer will be triggered
+/// ```
+#[derive(Resource)]
+pub struct DisableTriggers;
+
 /// Collection of [`ObserverRunner`] for [`Observer`] registered to a particular trigger.
 #[derive(Default, Debug)]
 pub struct CachedObservers {
@@ -429,6 +456,11 @@ impl Observers {
         propagate: &mut bool,
         caller: MaybeLocation,
     ) {
+        // Check if triggers are disabled
+        if world.get_resource::<DisableTriggers>().is_some() {
+            return;
+        }
+
         // SAFETY: You cannot get a mutable reference to `observers` from `DeferredWorld`
         let (mut world, observers) = unsafe {
             let world = world.as_unsafe_world_cell();
@@ -1785,5 +1817,69 @@ mod tests {
         let counter = world.resource::<Counter>();
         assert_eq!(4, *counter.0.get(&a_id).unwrap());
         assert_eq!(3, *counter.0.get(&b_id).unwrap());
+    }
+
+    #[test]
+    fn test_disable_triggers_resource() {
+        use crate::prelude::*;
+        use crate::observer::DisableTriggers;
+
+        #[derive(Component, Default)]
+        struct InitiateTrigger;
+
+        #[derive(Component, Default)]
+        struct TriggerPerformed;
+
+        let mut world = World::new();
+
+        // Spawn an entity with a component
+        let entity = world.spawn_empty().id();
+        
+        // Add an observer to the world that adds a marker component when InitiateTrigger is added
+        world.add_observer(|trigger: Trigger<OnAdd, InitiateTrigger>, mut commands: Commands| {
+            commands.entity(trigger.target()).insert(TriggerPerformed);
+        });
+
+        // Spawn an entity with InitiateTrigger - this should trigger the observer
+        world.entity_mut(entity).insert(InitiateTrigger);
+        
+        // Verify the component was added (observers should have run)
+        assert!(
+            world.entity(entity).get::<TriggerPerformed>().is_some(),
+            "TriggerPerformed component should exist while triggers are active"
+        );
+
+        // Clean up
+        world.entity_mut(entity).remove::<InitiateTrigger>();
+        world.entity_mut(entity).remove::<TriggerPerformed>();
+
+        // Now disable triggers
+        world.insert_resource(DisableTriggers);
+
+        world.entity_mut(entity).insert(InitiateTrigger);
+
+        // Verify the component was not added (observers should have run)
+        assert!(
+            world.entity(entity).get::<TriggerPerformed>().is_none(),
+            "TriggerPerformed component should not exist while triggers are inactive"
+        );
+        
+        // Clean up
+        world.entity_mut(entity).remove::<InitiateTrigger>();
+
+        // Remove resource to test that triggers can be reactivated
+        world.remove_resource::<DisableTriggers>();
+
+        world.entity_mut(entity).insert(InitiateTrigger);
+        
+        // Verify the component was added (observers be running again)
+        assert!(
+            world.entity(entity).get::<TriggerPerformed>().is_some(),
+            "TriggerPerformed component should exist while triggers are active"
+        );
+
+        // Clean up
+        world.entity_mut(entity).remove::<InitiateTrigger>();
+        world.entity_mut(entity).remove::<TriggerPerformed>();
     }
 }
