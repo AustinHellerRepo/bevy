@@ -150,6 +150,7 @@ impl<E: Debug + Clone + Reflect> Pointer<E> {
 
 /// Fires when a pointer is canceled, and its current interaction state is dropped.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct Cancel {
     /// Information about the picking intersection.
@@ -158,6 +159,7 @@ pub struct Cancel {
 
 /// Fires when a the pointer crosses into the bounds of the `target` entity.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct Over {
     /// Information about the picking intersection.
@@ -166,6 +168,7 @@ pub struct Over {
 
 /// Fires when a the pointer crosses out of the bounds of the `target` entity.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct Out {
     /// Information about the latest prior picking intersection.
@@ -174,6 +177,7 @@ pub struct Out {
 
 /// Fires when a pointer button is pressed over the `target` entity.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct Pressed {
     /// Pointer button pressed to trigger this event.
@@ -184,6 +188,7 @@ pub struct Pressed {
 
 /// Fires when a pointer button is released over the `target` entity.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct Released {
     /// Pointer button lifted to trigger this event.
@@ -195,6 +200,7 @@ pub struct Released {
 /// Fires when a pointer sends a pointer pressed event followed by a pointer released event, with the same
 /// `target` entity for both events.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct Click {
     /// Pointer button pressed and lifted to trigger this event.
@@ -207,6 +213,7 @@ pub struct Click {
 
 /// Fires while a pointer is moving over the `target` entity.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct Move {
     /// Information about the picking intersection.
@@ -217,6 +224,7 @@ pub struct Move {
 
 /// Fires when the `target` entity receives a pointer pressed event followed by a pointer move event.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct DragStart {
     /// Pointer button pressed and moved to trigger this event.
@@ -227,6 +235,7 @@ pub struct DragStart {
 
 /// Fires while the `target` entity is being dragged.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct Drag {
     /// Pointer button pressed and moved to trigger this event.
@@ -239,6 +248,7 @@ pub struct Drag {
 
 /// Fires when a pointer is dragging the `target` entity and a pointer released event is received.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct DragEnd {
     /// Pointer button pressed, moved, and released to trigger this event.
@@ -249,6 +259,7 @@ pub struct DragEnd {
 
 /// Fires when a pointer dragging the `dragged` entity enters the `target` entity.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct DragEnter {
     /// Pointer button pressed to enter drag.
@@ -261,6 +272,7 @@ pub struct DragEnter {
 
 /// Fires while the `dragged` entity is being dragged over the `target` entity.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct DragOver {
     /// Pointer button pressed while dragging over.
@@ -273,6 +285,7 @@ pub struct DragOver {
 
 /// Fires when a pointer dragging the `dragged` entity leaves the `target` entity.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct DragLeave {
     /// Pointer button pressed while leaving drag.
@@ -285,6 +298,7 @@ pub struct DragLeave {
 
 /// Fires when a pointer drops the `dropped` entity onto the `target` entity.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct DragDrop {
     /// Pointer button released to drop.
@@ -297,6 +311,7 @@ pub struct DragDrop {
 
 /// Dragging state.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct DragEntry {
     /// The position of the pointer at drag start.
@@ -307,6 +322,7 @@ pub struct DragEntry {
 
 /// Fires while a pointer is scrolling over the `target` entity.
 #[derive(Clone, PartialEq, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct Scroll {
     /// The mouse scroll unit.
@@ -322,6 +338,7 @@ pub struct Scroll {
 /// An entry in the cache that drives the `pointer_events` system, storing additional data
 /// about pointer button presses.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 pub struct PointerButtonState {
     /// Stores the press location and start time for each button currently being pressed by the pointer.
     pub pressing: HashMap<Entity, (Location, Instant, HitData)>,
@@ -333,6 +350,7 @@ pub struct PointerButtonState {
 
 /// State for all pointers.
 #[derive(Debug, Clone, Default, Resource)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 pub struct PointerState {
     /// Pressing and dragging state, organized by pointer and button.
     pub pointer_buttons: HashMap<(PointerId, PointerButton), PointerButtonState>,
