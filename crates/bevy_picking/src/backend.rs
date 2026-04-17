@@ -35,6 +35,9 @@ use bevy_ecs::prelude::*;
 use bevy_math::Vec3;
 use bevy_reflect::Reflect;
 
+#[cfg(feature = "serialize")]
+use serde::{Serialize, Deserialize}; 
+
 /// The picking backend prelude.
 ///
 /// This includes the most common types in this module, re-exported for your convenience.
