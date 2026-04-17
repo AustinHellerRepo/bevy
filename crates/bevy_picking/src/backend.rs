@@ -96,6 +96,7 @@ impl PointerHits {
 
 /// Holds data from a successful pointer hit test. See [`HitData::depth`] for important details.
 #[derive(Clone, Debug, PartialEq, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub struct HitData {
     /// The camera entity used to detect this hit. Useful when you need to find the ray that was
