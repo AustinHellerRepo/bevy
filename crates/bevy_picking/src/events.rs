@@ -49,6 +49,9 @@ use bevy_render::camera::NormalizedRenderTarget;
 use bevy_window::Window;
 use tracing::debug;
 
+#[cfg(feature = "serialize")]
+use serde::{Serialize, Deserialize}; 
+
 use crate::{
     backend::{prelude::PointerLocation, HitData},
     hover::{HoverMap, PreviousHoverMap},
