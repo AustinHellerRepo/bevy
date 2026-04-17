@@ -5,9 +5,10 @@ use bevy_math::UVec2;
 use bevy_platform::collections::HashMap;
 use bevy_reflect::prelude::*;
 use wgpu::TextureFormat;
+use serde::{Serialize, Deserialize};
 
 /// A unique id that corresponds to a specific [`ManualTextureView`] in the [`ManualTextureViews`] collection.
-#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Component, Reflect)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Component, Reflect, Serialize, Deserialize)]
 #[reflect(Component, Default, Debug, PartialEq, Hash, Clone)]
 pub struct ManualTextureViewHandle(pub u32);
 

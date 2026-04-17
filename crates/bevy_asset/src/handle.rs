@@ -4,6 +4,7 @@ use crate::{
 };
 use alloc::sync::Arc;
 use bevy_reflect::{std_traits::ReflectDefault, Reflect, TypePath};
+use serde::{Deserialize, Serialize};
 use core::{
     any::TypeId,
     hash::{Hash, Hasher},
@@ -137,6 +138,35 @@ pub enum Handle<A: Asset> {
     /// A "weak" reference to an [`Asset`]. If a [`Handle`] is [`Handle::Weak`], it does not necessarily reference a live [`Asset`],
     /// nor will it keep assets alive.
     Weak(AssetId<A>),
+}
+
+impl<A: Asset> Serialize for Handle<A> {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>                                                        
+    where
+        S: serde::Serializer,                                                                                               
+    {
+        match self {
+            Self::Strong(_) => {
+                // Convert self to a weak handle and serialize that
+                let weak_handle = self.clone_weak();
+                weak_handle.serialize(serializer)                                                                                  
+            },
+            Self::Weak(asset_id) => {
+                asset_id.serialize(serializer)
+            },
+        }
+    }
+}
+
+impl<'de, A: Asset> Deserialize<'de> for Handle<A> {                                                                        
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>                                                            
+    where
+        D: serde::Deserializer<'de>,                                                                                        
+    {
+        // Deserialize as an AssetId<A> (which is what Weak contains)                                                           
+        let asset_id = AssetId::<A>::deserialize(deserializer)?;                                                                
+        Ok(Handle::Weak(asset_id))                                                                                          
+    }
 }
 
 impl<T: Asset> Clone for Handle<T> {

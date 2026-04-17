@@ -47,6 +47,7 @@ use derive_more::derive::From;
 use thiserror::Error;
 use tracing::warn;
 use wgpu::{BlendState, TextureFormat, TextureUsages};
+use serde::{Serialize, Deserialize}; 
 
 /// Render viewport configuration for the [`Camera`] component.
 ///
@@ -782,7 +783,7 @@ pub enum RenderTarget {
 }
 
 /// A render target that renders to an [`Image`].
-#[derive(Debug, Clone, Reflect, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(Debug, Clone, Reflect, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 #[reflect(Clone, PartialEq, Hash)]
 pub struct ImageRenderTarget {
     /// The image to render to.
@@ -816,7 +817,7 @@ impl Default for RenderTarget {
 /// Normalized version of the render target.
 ///
 /// Once we have this we shouldn't need to resolve it down anymore.
-#[derive(Debug, Clone, Reflect, PartialEq, Eq, Hash, PartialOrd, Ord, From)]
+#[derive(Debug, Clone, Reflect, PartialEq, Eq, Hash, PartialOrd, Ord, From, Serialize, Deserialize)]
 #[reflect(Clone, PartialEq, Hash)]
 pub enum NormalizedRenderTarget {
     /// Window to which the camera's view is rendered.

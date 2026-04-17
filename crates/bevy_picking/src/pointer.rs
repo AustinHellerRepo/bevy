@@ -20,6 +20,9 @@ use uuid::Uuid;
 
 use core::{fmt::Debug, ops::Deref};
 
+#[cfg(feature = "serialize")]
+use serde::{Serialize, Deserialize}; 
+
 use crate::backend::HitData;
 
 /// Identifies a unique pointer entity. `Mouse` and `Touch` pointers are automatically spawned.
@@ -206,6 +209,7 @@ impl PointerLocation {
 ///   render target. It is up to picking backends to associate a Pointer's `Location` with a
 ///   specific `Camera`, if any.
 #[derive(Debug, Clone, Component, Reflect, PartialEq)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Component, Debug, PartialEq, Clone)]
 pub struct Location {
     /// The [`NormalizedRenderTarget`] associated with the pointer, usually a window.
