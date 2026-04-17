@@ -30,6 +30,7 @@ use crate::backend::HitData;
 /// This component is needed because pointers can be spawned and despawned, but they need to have a
 /// stable ID that persists regardless of the Entity they are associated with.
 #[derive(Debug, Default, Clone, Copy, Eq, PartialEq, Hash, Component, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[require(PointerLocation, PointerPress, PointerInteraction)]
 #[reflect(Component, Default, Debug, Hash, PartialEq, Clone)]
 pub enum PointerId {
@@ -70,6 +71,7 @@ impl PointerId {
 /// Holds a list of entities this pointer is currently interacting with, sorted from nearest to
 /// farthest.
 #[derive(Debug, Default, Clone, Component, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Component, Default, Debug, Clone)]
 pub struct PointerInteraction {
     pub(crate) sorted_entities: Vec<(Entity, HitData)>,
@@ -92,6 +94,7 @@ impl Deref for PointerInteraction {
 
 /// A resource that maps each [`PointerId`] to their [`Entity`] for easy lookups.
 #[derive(Debug, Clone, Default, Resource)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 pub struct PointerMap {
     inner: HashMap<PointerId, Entity>,
 }
@@ -113,6 +116,7 @@ pub fn update_pointer_map(pointers: Query<(Entity, &PointerId)>, mut map: ResMut
 
 /// Tracks the state of the pointer's buttons in response to [`PointerInput`] events.
 #[derive(Debug, Default, Clone, Component, Reflect, PartialEq, Eq)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Component, Default, Debug, PartialEq, Clone)]
 pub struct PointerPress {
     primary: bool,
@@ -148,6 +152,7 @@ impl PointerPress {
 
 /// The stage of the pointer button press event
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub enum PressDirection {
     /// The pointer button was just pressed
@@ -158,6 +163,7 @@ pub enum PressDirection {
 
 /// The button that was just pressed or released
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone, PartialEq)]
 pub enum PointerButton {
     /// The primary pointer button
@@ -177,6 +183,7 @@ impl PointerButton {
 
 /// Component that tracks a pointer's current [`Location`].
 #[derive(Debug, Default, Clone, Component, Reflect, PartialEq)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Component, Default, Debug, PartialEq, Clone)]
 pub struct PointerLocation {
     /// The [`Location`] of the pointer. Note that a location is both the target, and the position
@@ -248,6 +255,7 @@ impl Location {
 
 /// Event sent to drive a pointer.
 #[derive(Debug, Clone, Copy, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone)]
 pub enum PointerAction {
     /// Causes the pointer to press a button.
@@ -274,6 +282,7 @@ pub enum PointerAction {
 
 /// An input event effecting a pointer.
 #[derive(Event, Debug, Clone, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Clone)]
 pub struct PointerInput {
     /// The id of the pointer.

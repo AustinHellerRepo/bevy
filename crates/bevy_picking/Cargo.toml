@@ -10,7 +10,11 @@ license = "MIT OR Apache-2.0"
 [features]
 # Provides a mesh picking backend
 bevy_mesh_picking_backend = ["dep:bevy_mesh", "dep:crossbeam-channel"]
-serialize = ["dep:serde", "hashbrown/serde"]
+serialize = [
+  "dep:serde",
+  "hashbrown/serde",
+  "bevy_input/serialize"
+]
 
 [dependencies]
 # bevy
