@@ -10,6 +10,7 @@ license = "MIT OR Apache-2.0"
 [features]
 # Provides a mesh picking backend
 bevy_mesh_picking_backend = ["dep:bevy_mesh", "dep:crossbeam-channel"]
+serialize = ["dep:serde", "hashbrown/serde"]
 
 [dependencies]
 # bevy
@@ -34,6 +35,11 @@ bevy_platform = { path = "../bevy_platform", version = "0.16.2", default-feature
 crossbeam-channel = { version = "0.5", optional = true }
 uuid = { version = "1.13.1", features = ["v4"] }
 tracing = { version = "0.1", default-features = false, features = ["std"] }
+hashbrown = { version = "0.15.1", features = [
+  "equivalent",
+  "raw-entry",
+], optional = true, default-features = false }
+serde = { version = "1", default-features = false, optional = true }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 # TODO: Assuming all wasm builds are for the browser. Require `no_std` support to break assumption.
