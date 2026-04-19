@@ -338,7 +338,6 @@ pub struct Scroll {
 /// An entry in the cache that drives the `pointer_events` system, storing additional data
 /// about pointer button presses.
 #[derive(Debug, Clone, Default)]
-#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 pub struct PointerButtonState {
     /// Stores the press location and start time for each button currently being pressed by the pointer.
     pub pressing: HashMap<Entity, (Location, Instant, HitData)>,
@@ -350,7 +349,6 @@ pub struct PointerButtonState {
 
 /// State for all pointers.
 #[derive(Debug, Clone, Default, Resource)]
-#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 pub struct PointerState {
     /// Pressing and dragging state, organized by pointer and button.
     pub pointer_buttons: HashMap<(PointerId, PointerButton), PointerButtonState>,
