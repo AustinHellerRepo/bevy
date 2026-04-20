@@ -25,6 +25,9 @@ use bevy_text::{
 use taffy::style::AvailableSpace;
 use tracing::error;
 
+#[cfg(feature = "serialize")]
+use serde::{Serialize, Deserialize}; 
+
 /// UI text system flags.
 ///
 /// Used internally by [`measure_text_system`] and [`text_system`] to schedule text for processing.
