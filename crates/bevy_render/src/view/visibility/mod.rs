@@ -17,6 +17,7 @@ use bevy_reflect::{std_traits::ReflectDefault, Reflect};
 use bevy_transform::{components::GlobalTransform, TransformSystem};
 use bevy_utils::{Parallel, TypeIdMap};
 use smallvec::SmallVec;
+use serde::{Serialize, Deserialize};
 
 use super::NoCpuCulling;
 use crate::{
@@ -33,7 +34,7 @@ use crate::{
 ///
 /// This is done by the `visibility_propagate_system` which uses the entity hierarchy and
 /// `Visibility` to set the values of each entity's [`InheritedVisibility`] component.
-#[derive(Component, Clone, Copy, Reflect, Debug, PartialEq, Eq, Default)]
+#[derive(Component, Clone, Copy, Reflect, Debug, PartialEq, Eq, Default, Serialize, Deserialize)]
 #[reflect(Component, Default, Debug, PartialEq, Clone)]
 #[require(InheritedVisibility, ViewVisibility)]
 pub enum Visibility {

@@ -1,4 +1,5 @@
 use bevy_render::view::{self, Visibility};
+use serde::{Serialize, Deserialize};
 
 use super::*;
 
@@ -25,7 +26,7 @@ use super::*;
 /// To enable shadows, set the `shadows_enabled` property to `true`.
 ///
 /// To control the resolution of the shadow maps, use the [`PointLightShadowMap`] resource.
-#[derive(Component, Debug, Clone, Copy, Reflect)]
+#[derive(Component, Debug, Clone, Copy, Reflect, Serialize, Deserialize)]
 #[reflect(Component, Default, Debug, Clone)]
 #[require(
     CubemapFrusta,

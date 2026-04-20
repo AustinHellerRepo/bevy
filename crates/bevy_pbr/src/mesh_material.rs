@@ -4,6 +4,7 @@ use bevy_derive::{Deref, DerefMut};
 use bevy_ecs::{component::Component, reflect::ReflectComponent};
 use bevy_reflect::{std_traits::ReflectDefault, Reflect};
 use derive_more::derive::From;
+use serde::{Deserialize, Serialize};
 
 /// A [material](Material) used for rendering a [`Mesh3d`].
 ///
@@ -36,7 +37,7 @@ use derive_more::derive::From;
 ///     ));
 /// }
 /// ```
-#[derive(Component, Clone, Debug, Deref, DerefMut, Reflect, From)]
+#[derive(Component, Clone, Debug, Deref, DerefMut, Reflect, From, Serialize, Deserialize)]
 #[reflect(Component, Default, Clone, PartialEq)]
 pub struct MeshMaterial3d<M: Material>(pub Handle<M>);
 

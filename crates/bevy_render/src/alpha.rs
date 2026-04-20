@@ -1,8 +1,9 @@
 use bevy_reflect::{std_traits::ReflectDefault, Reflect};
+use serde::{Deserialize, Serialize};
 
 // TODO: add discussion about performance.
 /// Sets how a material's base color alpha channel is used for transparency.
-#[derive(Debug, Default, Reflect, Copy, Clone, PartialEq)]
+#[derive(Debug, Default, Reflect, Copy, Clone, PartialEq, Serialize, Deserialize)]
 #[reflect(Default, Debug, Clone)]
 pub enum AlphaMode {
     /// Base color alpha values are overridden to be fully opaque (1.0).

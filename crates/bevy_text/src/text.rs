@@ -281,7 +281,7 @@ impl From<JustifyText> for cosmic_text::Align {
 
 /// `TextFont` determines the style of a text span within a [`ComputedTextBlock`], specifically
 /// the font face, the font size, and the color.
-#[derive(Component, Clone, Debug, Reflect)]
+#[derive(Component, Clone, Debug, Reflect, Serialize, Deserialize)]
 #[reflect(Component, Default, Debug, Clone)]
 pub struct TextFont {
     /// The specific font face to use, as a `Handle` to a [`Font`] asset.
@@ -359,7 +359,7 @@ impl Default for TextFont {
 /// Specifies the height of each line of text for `Text` and `Text2d`
 ///
 /// Default is 1.2x the font size
-#[derive(Debug, Clone, Copy, Reflect)]
+#[derive(Debug, Clone, Copy, Reflect, Serialize, Deserialize)]
 #[reflect(Debug, Clone)]
 pub enum LineHeight {
     /// Set line height to a specific number of pixels
@@ -384,7 +384,7 @@ impl Default for LineHeight {
 }
 
 /// The color of the text for this section.
-#[derive(Component, Copy, Clone, Debug, Deref, DerefMut, Reflect, PartialEq)]
+#[derive(Component, Copy, Clone, Debug, Deref, DerefMut, Reflect, PartialEq, Serialize, Deserialize)]
 #[reflect(Component, Default, Debug, PartialEq, Clone)]
 pub struct TextColor(pub Color);
 

@@ -7,6 +7,7 @@ use bevy_render::{
     texture::GpuImage,
 };
 use bitflags::bitflags;
+use serde::{Deserialize, Serialize};
 
 use crate::{deferred::DEFAULT_PBR_DEFERRED_LIGHTING_PASS_ID, *};
 
@@ -16,7 +17,7 @@ use crate::{deferred::DEFAULT_PBR_DEFERRED_LIGHTING_PASS_ID, *};
 /// It only supports two UV attributes, [`bevy_render::mesh::Mesh::ATTRIBUTE_UV_0`] and
 /// [`bevy_render::mesh::Mesh::ATTRIBUTE_UV_1`].
 /// The default is [`UvChannel::Uv0`].
-#[derive(Reflect, Default, Debug, Clone, PartialEq, Eq)]
+#[derive(Reflect, Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[reflect(Default, Debug, Clone, PartialEq)]
 pub enum UvChannel {
     #[default]
@@ -29,7 +30,7 @@ pub enum UvChannel {
 /// <https://google.github.io/filament/Material%20Properties.pdf>.
 ///
 /// May be created directly from a [`Color`] or an [`Image`].
-#[derive(Asset, AsBindGroup, Reflect, Debug, Clone)]
+#[derive(Asset, AsBindGroup, Reflect, Debug, Clone, Serialize, Deserialize)]
 #[bind_group_data(StandardMaterialKey)]
 #[data(0, StandardMaterialUniform, binding_array(10))]
 #[bindless(index_table(range(0..31)))]

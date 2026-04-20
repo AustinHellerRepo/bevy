@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+
 use super::*;
 
 /// An ambient light, which lights the entire scene equally.
@@ -17,7 +19,7 @@ use super::*;
 ///    ambient_light.brightness = 100.0;
 /// }
 /// ```
-#[derive(Resource, Component, Clone, Debug, ExtractResource, ExtractComponent, Reflect)]
+#[derive(Resource, Component, Clone, Debug, ExtractResource, ExtractComponent, Reflect, Serialize, Deserialize)]
 #[reflect(Resource, Component, Debug, Default, Clone)]
 #[require(Camera)]
 pub struct AmbientLight {

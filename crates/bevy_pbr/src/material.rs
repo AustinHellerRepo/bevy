@@ -53,6 +53,7 @@ use bevy_render::{
 use bevy_render::{mesh::allocator::MeshAllocator, sync_world::MainEntityHashMap};
 use bevy_render::{texture::FallbackImage, view::RenderVisibleEntities};
 use bevy_utils::Parallel;
+use serde::{Deserialize, Serialize};
 use core::{hash::Hash, marker::PhantomData};
 use tracing::error;
 
@@ -1307,7 +1308,7 @@ impl DefaultOpaqueRendererMethod {
 /// bandwidth usage which can be unsuitable for low end mobile or other bandwidth-constrained devices.
 ///
 /// If a material indicates `OpaqueRendererMethod::Auto`, `DefaultOpaqueRendererMethod` will be used.
-#[derive(Default, Clone, Copy, Debug, PartialEq, Reflect)]
+#[derive(Default, Clone, Copy, Debug, PartialEq, Reflect, Serialize, Deserialize)]
 #[reflect(Default, Clone, PartialEq)]
 pub enum OpaqueRendererMethod {
     #[default]

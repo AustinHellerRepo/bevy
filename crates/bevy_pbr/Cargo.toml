@@ -55,6 +55,7 @@ bitflags = "2.3"
 fixedbitset = "0.5"
 thiserror = { version = "2", default-features = false }
 derive_more = { version = "1", default-features = false, features = ["from"] }
+serde = { version = "1", features = ["derive"] }
 # meshlet
 lz4_flex = { version = "0.11", default-features = false, features = [
   "frame",

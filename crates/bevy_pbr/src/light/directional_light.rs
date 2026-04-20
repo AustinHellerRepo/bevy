@@ -1,4 +1,5 @@
 use bevy_render::view::{self, Visibility};
+use serde::{Deserialize, Serialize};
 
 use super::*;
 
@@ -42,7 +43,7 @@ use super::*;
 /// change the [`CascadeShadowConfig`] component of the entity with the [`DirectionalLight`].
 ///
 /// To control the resolution of the shadow maps, use the [`DirectionalLightShadowMap`] resource.
-#[derive(Component, Debug, Clone, Reflect)]
+#[derive(Component, Debug, Clone, Reflect, Serialize, Deserialize)]
 #[reflect(Component, Default, Debug, Clone)]
 #[require(
     Cascades,

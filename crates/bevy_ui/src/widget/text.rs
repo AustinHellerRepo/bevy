@@ -94,6 +94,7 @@ impl Default for TextNodeFlags {
 /// });
 /// ```
 #[derive(Component, Debug, Default, Clone, Deref, DerefMut, Reflect, PartialEq)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Component, Default, Debug, PartialEq, Clone)]
 #[require(Node, TextLayout, TextFont, TextColor, TextNodeFlags, ContentSize)]
 pub struct Text(pub String);

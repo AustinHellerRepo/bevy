@@ -1,4 +1,5 @@
 use bevy_render::view::{self, Visibility};
+use serde::{Deserialize, Serialize};
 
 use super::*;
 
@@ -7,7 +8,7 @@ use super::*;
 /// Behaves like a point light in a perfectly absorbent housing that
 /// shines light only in a given direction. The direction is taken from
 /// the transform, and can be specified with [`Transform::looking_at`](Transform::looking_at).
-#[derive(Component, Debug, Clone, Copy, Reflect)]
+#[derive(Component, Debug, Clone, Copy, Reflect, Serialize, Deserialize)]
 #[reflect(Component, Default, Debug, Clone)]
 #[require(Frustum, VisibleMeshEntities, Transform, Visibility, VisibilityClass)]
 #[component(on_add = view::add_visibility_class::<LightVisibilityClass>)]

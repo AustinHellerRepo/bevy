@@ -2157,6 +2157,7 @@ pub struct CalculatedClip {
 /// Use [`GlobalZIndex`] if you need to order separate UI hierarchies or nodes that are
 /// not siblings in a given UI hierarchy.
 #[derive(Component, Copy, Clone, Debug, Default, PartialEq, Eq, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Component, Default, Debug, PartialEq, Clone)]
 pub struct ZIndex(pub i32);
 
@@ -2167,6 +2168,7 @@ pub struct ZIndex(pub i32);
 ///
 /// If two Nodes have the same `GlobalZIndex`, the node with the greater [`ZIndex`] will be drawn on top.
 #[derive(Component, Copy, Clone, Debug, Default, PartialEq, Eq, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Component, Default, Debug, PartialEq, Clone)]
 pub struct GlobalZIndex(pub i32);
 
@@ -2643,6 +2645,7 @@ mod tests {
 /// which is either a single camera with the [`IsDefaultUiCamera`] marker component or the highest
 /// order camera targeting the primary window.
 #[derive(Component, Clone, Debug, Reflect, Eq, PartialEq)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Component, Debug, PartialEq, Clone)]
 pub struct UiTargetCamera(pub Entity);
 
@@ -2686,6 +2689,7 @@ impl UiTargetCamera {
 /// }
 /// ```
 #[derive(Component, Default)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 pub struct IsDefaultUiCamera;
 
 #[derive(SystemParam)]
@@ -2737,6 +2741,7 @@ impl<'w, 's> DefaultUiCamera<'w, 's> {
 /// }
 /// ```
 #[derive(Component, Clone, Copy, Default, Debug, Reflect, Eq, PartialEq)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Component, Default, PartialEq, Clone)]
 pub enum UiAntiAlias {
     /// UI will render with anti-aliasing
@@ -2763,6 +2768,7 @@ pub enum UiAntiAlias {
 /// }
 /// ```
 #[derive(Component, Clone, Copy, Debug, Reflect, Eq, PartialEq)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Component, Default, PartialEq, Clone)]
 pub struct BoxShadowSamples(pub u32);
 
@@ -2774,6 +2780,7 @@ impl Default for BoxShadowSamples {
 
 /// Derived information about the camera target for this UI node.
 #[derive(Component, Clone, Copy, Debug, Reflect, PartialEq)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Component, Default, PartialEq, Clone)]
 pub struct ComputedNodeTarget {
     pub(crate) camera: Entity,
@@ -2811,6 +2818,7 @@ impl ComputedNodeTarget {
 
 /// Adds a shadow behind text
 #[derive(Component, Copy, Clone, Debug, Reflect)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
 #[reflect(Component, Default, Debug, Clone)]
 pub struct TextShadow {
     /// Shadow displacement in logical pixels
