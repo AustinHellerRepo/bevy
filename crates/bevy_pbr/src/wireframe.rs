@@ -55,6 +55,7 @@ use bevy_render::{
 };
 use core::{hash::Hash, ops::Range};
 use tracing::error;
+use serde::{Deserialize, Serialize};
 
 pub const WIREFRAME_SHADER_HANDLE: Handle<Shader> =
     weak_handle!("2646a633-f8e3-4380-87ae-b44d881abbce");
@@ -173,7 +174,7 @@ impl Plugin for WireframePlugin {
 /// It will ignore the [`WireframeConfig`] global setting.
 ///
 /// This requires the [`WireframePlugin`] to be enabled.
-#[derive(Component, Debug, Clone, Default, Reflect, Eq, PartialEq)]
+#[derive(Component, Debug, Clone, Default, Reflect, Eq, PartialEq, Serialize, Deserialize)]
 #[reflect(Component, Default, Debug, PartialEq)]
 pub struct Wireframe;
 
@@ -421,13 +422,13 @@ impl ViewNode for Wireframe3dNode {
 /// it will still affect the color of the wireframe when [`WireframeConfig::global`] is set to true.
 ///
 /// This overrides the [`WireframeConfig::default_color`].
-#[derive(Component, Debug, Clone, Default, Reflect)]
+#[derive(Component, Debug, Clone, Default, Reflect, Serialize, Deserialize)]
 #[reflect(Component, Default, Debug)]
 pub struct WireframeColor {
     pub color: Color,
 }
 
-#[derive(Component, Debug, Clone, Default)]
+#[derive(Component, Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ExtractedWireframeColor {
     pub color: [f32; 4],
 }
@@ -436,11 +437,11 @@ pub struct ExtractedWireframeColor {
 /// It will ignore the [`WireframeConfig`] global setting.
 ///
 /// This requires the [`WireframePlugin`] to be enabled.
-#[derive(Component, Debug, Clone, Default, Reflect, Eq, PartialEq)]
+#[derive(Component, Debug, Clone, Default, Reflect, Eq, PartialEq, Serialize, Deserialize)]
 #[reflect(Component, Default, Debug, PartialEq)]
 pub struct NoWireframe;
 
-#[derive(Resource, Debug, Clone, Default, ExtractResource, Reflect)]
+#[derive(Resource, Debug, Clone, Default, ExtractResource, Reflect, Serialize, Deserialize)]
 #[reflect(Resource, Debug, Default)]
 pub struct WireframeConfig {
     /// Whether to show wireframes for all meshes.
@@ -462,7 +463,7 @@ pub struct RenderWireframeMaterial {
     pub color: [f32; 4],
 }
 
-#[derive(Component, Clone, Debug, Default, Deref, DerefMut, Reflect, PartialEq, Eq)]
+#[derive(Component, Clone, Debug, Default, Deref, DerefMut, Reflect, PartialEq, Eq, Serialize, Deserialize)]
 #[reflect(Component, Default, Clone, PartialEq)]
 pub struct Mesh3dWireframe(pub Handle<WireframeMaterial>);
 
@@ -520,7 +521,7 @@ pub struct SpecializedWireframeViewPipelineCache {
     map: MainEntityHashMap<(Tick, CachedRenderPipelineId)>,
 }
 
-#[derive(Resource)]
+#[derive(Resource, Serialize, Deserialize)]
 struct GlobalWireframeMaterial {
     // This handle will be reused when the global config is enabled
     handle: Handle<WireframeMaterial>,
