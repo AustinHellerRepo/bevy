@@ -19,6 +19,9 @@ use smallvec::SmallVec;
 use thiserror::Error;
 use tracing::warn;
 
+#[cfg(feature = "serialize")]
+use serde::{Serialize, Deserialize}; 
+
 /// Provides the computed size and layout properties of the node.
 ///
 /// Fields in this struct are public but should not be modified under most circumstances.
